@@ -44,7 +44,16 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientOpt.get());
     }
 
-
+    @PutMapping("/clients/{idClient}")
+    public ResponseEntity<Object> updateClient(@PathVariable("idClient") UUID idClient, @RequestBody @Valid ClientRecordDto clientRecordDto){
+        Optional<ClientModel> clientOpt = clientRepository.findById(idClient);
+        if(clientOpt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not Found.");
+        }
+        ClientModel clientModel = clientOpt.get();
+        BeanUtils.copyProperties(clientOpt, clientModel);
+        return ResponseEntity.status(HttpStatus.OK).body(clientRepository.save(clientModel));
+    }
 
 
 }
