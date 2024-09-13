@@ -55,5 +55,13 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientRepository.save(clientModel));
     }
 
-
+    @DeleteMapping("/clients/{idClient}")
+    public ResponseEntity<Object> deleteClient(@PathVariable("idClient") UUID idClient){
+        Optional<ClientModel> clientOpt = clientRepository.findById(idClient);
+        if(clientOpt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not Found.");
+        }
+        clientRepository.delete(clientOpt.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Client Delete Successfully");
+    }
 }
